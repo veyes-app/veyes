@@ -1,46 +1,85 @@
-# Getting Started with Create React App
+# Veyes: The extensible visualization tool
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Veyes aim at providing an alternative visualization tool. Some of it feature are inspired from Grafana
 
-## Available Scripts
+*Note*: The project is in heavy development; No release are provided for now. See build instructions 
 
-In the project directory, you can run:
+## Plugins
 
-### `npm start`
+The aim of this project is to be plugin-centric.
+It aims at providing a very durable and robust core that can be massively extended using plugins
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Plugins will be split into two main category
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+- Server side plugins 
+- Frontend side plugins
 
-### `npm test`
+## Design choices, architecture and roadmap
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+* Typescript and javascript as the unique language for UI and Server
+* Reusable types for Server and UI 
+* Strong isolation between module / plugins
+* Core application consist of basic APIs, interfaces, and a rudimentary UI
+* Core application alone is useless: Veyes must provide core plugins for basic usage
+* Inspired by Grafana and k8s
+* Provide seamless k8s api integration
+* ReactJs for frontend 
+* Plugin dependency tree. Each plugin can require another plugin to work 
 
-### `npm run build`
+## Quick start 
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+* Build all: ```yarn run build```
+* Run server: ```yarn run build```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Packages Structure
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+* The npm `@veyes` organization contains core components required for minimal startup 
+  * `@veyes/core`: 
+  * `@veyes/models`: data-model and types to be shared between Server, UI and plugins
+  * `@veyes/server`: Webserver and API for Veyes
+  * `@veyes/ui`: Shared library of UI components
+  * `@veyes/webapp`: Veyes main UI (without plugins)
+  * `@veyes/tools`: script and tools used across the project
+* The npm `@veyes-plugin` organization contains optional and built-in plugins
+  * `@veyes-plugin/dashboards`: Plugin dedicated to dashboard management (provide basic API and UI)  
+  * `@veyes-plugin/datasources`: Plugin dedicated to datasource management (provide basic API and UI)
+  * `@veyes-plugin/datasource-random`: Random based datasource  
+  * `@veyes-plugin/panel-text`: Text panel 
+  * `@veyes-plugin/panel-timeseries`: time-series panel
+  * And many more later ! 
+ 
+## Documentation
 
-### `npm run eject`
+(coming soon)
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## License
+    
+    Copyright 2023 Willena (VILLENA Guillaume) and Contributors
+    
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+    
+        http://www.apache.org/licenses/LICENSE-2.0
+    
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
-## Learn More
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+
+
+
+
+ 
+
+
+
+  
+
