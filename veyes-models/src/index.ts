@@ -1,2 +1,6 @@
 export * from './plugins'
-export * from './query'
+export * from './storage'
+export * from './httpApi'
+export * from './registry'
+export * from './app'
+export * from './config'

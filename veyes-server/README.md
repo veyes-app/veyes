@@ -7,14 +7,16 @@
 *  Main API 
 *  GET /apis => all apis from plugins
 *  POST,DELETE /apis/<group>/<version>
+*
 *  WS /api/** => subscribe to events for a particular api / resource
-*  --------
+*
 *
 * PLUGINS management plugin
 *  GET /api/plugins/v1 => all plugins ?enabled=true
 *  POST /api/plugins/v1 => install new plugin ?
 *  GET,DELETE /api/plugins/v1/<plugin-uid> => get,delete (uninstall) plugins
-*
+* 
+*  --------
 * DATASOURCES management plugin
 *  GET /api/datasource/v1/ => list available datasource (filters?)
 *  POST /api/datasource/v1/ => new instance !

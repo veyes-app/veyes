@@ -1,0 +1,25 @@
+{
+  "name": "@veyes-plugins/config-provider-json",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@veyes/models": "^1.0.0",
+    "yaml": "^2.3.4"
+  },
+  "devDependencies": {
+    "@types/yaml": "^1.9.7",
+    "typescript": "^5.2.2"
+  },
+  "veyesMetadata": {
+    "id": "json-config-provider",
+    "name": "Json/Yaml configuration provider"
+  }
+}

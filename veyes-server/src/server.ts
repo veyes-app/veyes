@@ -1,35 +1,83 @@
-
-import express, {Express} from 'express'
+import express from 'express'
+import wsExpress, {Application, Instance} from 'express-ws'
 import http from 'http'
 import https from 'https'
-import {PluginBundle} from '@veyes/models'
+import {PluginLoader} from "./plugins";
+import {CliConfigLoader} from "./config/cliConfigLoader";
+import {BootstrapConfigLoader} from "./config/bootstrapLoader";
+import {Registries} from "@veyes/core";
+import {DataBackendAPI, MinimalConfig, NewDataBackendAPI, ServerConfig} from "@veyes/models";
 
 interface WebserverOptions {
     plugins: string[]
     pluginPath: string
 }
 
+enum KnownRegistryTypes {
+    ConfigProviders = 'ConfigProviders',
+    Plugins = 'Plugins',
+    DataBackendProvider = 'DataBackendProvider'
+}
+
 export class WebServer {
-    private server: Express
+    private readonly wsServer: Instance;
+    private readonly server: Application;
+    private readonly registries: Registries
+    private pluginLoader: PluginLoader;
+    private config: ServerConfig;
+    private dataBackend: DataBackendAPI
 
     constructor() {
-        this.server = express()
+        this.wsServer = wsExpress(express())
+        this.server = this.wsServer.app
+        this.registries = new Registries()
+
+
+        this.bootstrap();
+        this.initializeDataBackend()
     }
 
-    private loadPlugins() {
+    private bootstrap() {
+        const cliLoader = new CliConfigLoader()
+        this.registries.forType(KnownRegistryTypes.ConfigProviders).register(cliLoader)
 
+        const cliConfig = cliLoader.getConfiguration()
+        const minimalConfig: MinimalConfig = {pluginsDirectories: cliConfig.pluginsDirectories}
+
+        this.pluginLoader = new PluginLoader(minimalConfig)
+
+        this.config = new BootstrapConfigLoader(this.registries.forType(KnownRegistryTypes.ConfigProviders), minimalConfig).getConfiguration()
     }
 
-    private loadPlugin(path: string) {
-        import(path).then((v) => {
-            //v is an exported module (should)
-            const exported: PluginBundle = v
-            
-        })
+    private initializeDataBackend() {
+        if (!this.config.dataBackend) {
+            throw new Error("No databackend definied ")
+        }
+        const backendUrl = new URL(this.config.dataBackend)
+        const backendProvider = this.registries.forType(KnownRegistryTypes.DataBackendProvider).list()
+            .filter(([scheme,]) => backendUrl.protocol === scheme)
+            .shift()[1] as NewDataBackendAPI | undefined
+
+        if (!backendProvider) {
+            throw new Error(`Could not find any provider that can handle the following connection string ${this.config.dataBackend}`)
+        }
+
+        this.dataBackend = new backendProvider(backendUrl)
     }
 
     start() {
-        http.createServer(this.server).listen(80)
-        https.createServer(this.server).listen(443)
+
+        const httpServer = http.createServer(this.server).listen(80)
+        const httpsServer = https.createServer(this.server).listen(443)
+
+        const onErrorCb = (e) => {
+            httpsServer.close()
+            httpServer.close()
+            console.error("Could not start server ", e)
+        }
+
+        httpServer.on('error', onErrorCb)
+        httpsServer.on('error', onErrorCb)
     }
+
 }

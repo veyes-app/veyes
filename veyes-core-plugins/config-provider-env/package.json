@@ -1,0 +1,23 @@
+{
+  "name": "@veyes-plugins/config-provider-env",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@veyes/models": "^1.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.2.2"
+  },
+  "veyesMetadata": {
+    "id": "env-config-provider",
+    "name": "Env configuration provider"
+  }
+}
