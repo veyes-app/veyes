@@ -1,2 +1,2 @@
 // export * from './datasource'
-// export * from './pluginBundle'
+export * from './pluginBundle'

@@ -19,16 +19,16 @@ import npmFetch, {pickRegistry} from 'npm-registry-fetch'
 import nap from 'npm-package-arg'
 import tar from 'tar'
 
-export const pluginRegistry = new Registry<PluginBundle>
-
 const DOWNLOAD_DIRECTORY = Path.resolve(os.tmpdir(), "veyes-downloads", ".tarball")
 const EXTRACT_DIRECTORY = Path.resolve(os.tmpdir(), "veyes-downloads")
 
 export class PluginLoader implements PluginLoaderIf {
     private readonly config: PluginLoaderConfig;
+    private registry: Registry<PluginBundle>;
 
-    constructor(config: PluginLoaderConfig) {
+    constructor(config: PluginLoaderConfig, pluginRegistry: Registry<PluginBundle>) {
         this.config = config
+        this.registry = pluginRegistry
         this.updateNodePath()
     }
 
@@ -169,7 +169,7 @@ export class PluginLoader implements PluginLoaderIf {
         const imported: PluginBundle = require(moduleRef)
 
         //Add checks to ensure it is a valid-exported content !
-        pluginRegistry.register(imported, name)
+        this.registry.register(imported, name)
     }
 
     private isExistingPackageValid(pathOrName: string, versionRange: string) {

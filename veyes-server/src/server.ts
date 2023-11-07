@@ -6,17 +6,11 @@ import {PluginLoader} from "./plugins";
 import {CliConfigLoader} from "./config/cliConfigLoader";
 import {BootstrapConfigLoader} from "./config/bootstrapLoader";
 import {Registries} from "@veyes/core";
-import {DataBackendAPI, MinimalConfig, NewDataBackendAPI, ServerConfig} from "@veyes/models";
+import {DataBackendAPI, KnownRegistryTypes, MinimalConfig, NewDataBackendAPI, ServerConfig} from "@veyes/models";
 
 interface WebserverOptions {
     plugins: string[]
     pluginPath: string
-}
-
-enum KnownRegistryTypes {
-    ConfigProviders = 'ConfigProviders',
-    Plugins = 'Plugins',
-    DataBackendProvider = 'DataBackendProvider'
 }
 
 export class WebServer {
@@ -31,10 +25,6 @@ export class WebServer {
         this.wsServer = wsExpress(express())
         this.server = this.wsServer.app
         this.registries = new Registries()
-
-
-        this.bootstrap();
-        this.initializeDataBackend()
     }
 
     private bootstrap() {
@@ -44,14 +34,15 @@ export class WebServer {
         const cliConfig = cliLoader.getConfiguration()
         const minimalConfig: MinimalConfig = {pluginsDirectories: cliConfig.pluginsDirectories}
 
-        this.pluginLoader = new PluginLoader(minimalConfig)
+        this.pluginLoader = new PluginLoader(minimalConfig, this.registries.forType(KnownRegistryTypes.Plugins))
+        this.pluginLoader.loadAllModules();
 
         this.config = new BootstrapConfigLoader(this.registries.forType(KnownRegistryTypes.ConfigProviders), minimalConfig).getConfiguration()
     }
 
     private initializeDataBackend() {
         if (!this.config.dataBackend) {
-            throw new Error("No databackend definied ")
+            throw new Error("No data-backend defined ")
         }
         const backendUrl = new URL(this.config.dataBackend)
         const backendProvider = this.registries.forType(KnownRegistryTypes.DataBackendProvider).list()
@@ -66,6 +57,9 @@ export class WebServer {
     }
 
     start() {
+
+        this.bootstrap();
+        this.initializeDataBackend()
 
         const httpServer = http.createServer(this.server).listen(80)
         const httpsServer = https.createServer(this.server).listen(443)

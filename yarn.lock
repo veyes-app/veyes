@@ -1216,20 +1216,22 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@veyes-plugins/config-provider-env@workspace:veyes-core-plugins/config-provider-env":
+"@veyes-plugins/config-provider-env@npm:1.0.0, @veyes-plugins/config-provider-env@workspace:veyes-core-plugins/config-provider-env":
   version: 0.0.0-use.local
   resolution: "@veyes-plugins/config-provider-env@workspace:veyes-core-plugins/config-provider-env"
   dependencies:
+    "@veyes/core": "npm:^1.0.0"
     "@veyes/models": "npm:^1.0.0"
     typescript: "npm:^5.2.2"
   languageName: unknown
   linkType: soft
 
-"@veyes-plugins/config-provider-json@workspace:veyes-core-plugins/config-provider-json":
+"@veyes-plugins/config-provider-json@npm:1.0.0, @veyes-plugins/config-provider-json@workspace:veyes-core-plugins/config-provider-json":
   version: 0.0.0-use.local
   resolution: "@veyes-plugins/config-provider-json@workspace:veyes-core-plugins/config-provider-json"
   dependencies:
     "@types/yaml": "npm:^1.9.7"
+    "@veyes/core": "npm:^1.0.0"
     "@veyes/models": "npm:^1.0.0"
     typescript: "npm:^5.2.2"
     yaml: "npm:^2.3.4"
@@ -1274,7 +1276,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@veyes-plugins/storage-backend-etcd@workspace:veyes-core-plugins/storage-backend-etcd":
+"@veyes-plugins/storage-backend-etcd@npm:1.0.0, @veyes-plugins/storage-backend-etcd@workspace:veyes-core-plugins/storage-backend-etcd":
   version: 0.0.0-use.local
   resolution: "@veyes-plugins/storage-backend-etcd@workspace:veyes-core-plugins/storage-backend-etcd"
   dependencies:
@@ -1285,7 +1287,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@veyes-plugins/storage-backend-sqlite@workspace:veyes-core-plugins/storage-backend-sqlite":
+"@veyes-plugins/storage-backend-sqlite@npm:1.0.0, @veyes-plugins/storage-backend-sqlite@workspace:veyes-core-plugins/storage-backend-sqlite":
   version: 0.0.0-use.local
   resolution: "@veyes-plugins/storage-backend-sqlite@workspace:veyes-core-plugins/storage-backend-sqlite"
   dependencies:
@@ -1350,6 +1352,10 @@ __metadata:
     "@types/semver": "npm:^7.5.4"
     "@types/tar": "npm:^6.1.7"
     "@types/yaml": "npm:^1.9.7"
+    "@veyes-plugins/config-provider-env": "npm:1.0.0"
+    "@veyes-plugins/config-provider-json": "npm:1.0.0"
+    "@veyes-plugins/storage-backend-etcd": "npm:1.0.0"
+    "@veyes-plugins/storage-backend-sqlite": "npm:1.0.0"
     "@veyes/core": "npm:1.0.0"
     "@veyes/models": "npm:1.0.0"
     express: "npm:^4.18.2"

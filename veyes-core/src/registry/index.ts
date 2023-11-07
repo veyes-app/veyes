@@ -29,14 +29,15 @@ export class Registries implements RegistriesIf {
 }
 
 export class Registry<T> implements RegistryIf<T> {
-    private items: Record<string, T>
+    private readonly items: Record<string, T>
 
     constructor() {
         this.items = {}
     }
 
-    register(element: T, name = element.constructor.name) {
+    register(element: T, name = element.constructor.name): RegistryIf<T> {
         this.items[name] = element
+        return this
     }
 
     get(name: string) {

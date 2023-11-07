@@ -4,7 +4,7 @@ import {AbstractDataBackend, urlParamsAsObject} from "@veyes/core";
 import {StorageObject, StorageReference} from "@veyes/models";
 import * as URL from "url";
 
-class EtcdBackend extends AbstractDataBackend {
+export class EtcdBackend extends AbstractDataBackend {
     private etcd: Etcd3;
 
     constructor(connectionString: URL) {

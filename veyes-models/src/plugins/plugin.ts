@@ -9,6 +9,7 @@ export interface PluginDescriptor {
 }
 
 export interface PluginBundle {
+
     // registerPanel(panelPlugin: PanelPluginApi): PluginBundle
     //
     // registerDatasource(datasource: DatasourcePluginApi<any>): PluginBundle
