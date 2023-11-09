@@ -5,5 +5,5 @@ import {PluginBundleApi} from "@veyes/core";
 
 export const pluginBundle = new PluginBundleApi("configuration/v1")
     .forType(KnownRegistryTypes.ConfigProviders)
-    .register(new JsonConfigLoader(), "json")
-    .register(new YamlConfigLoader(), "yaml")
+    .register(JsonConfigLoader, "json")
+    .register(YamlConfigLoader, "yaml")

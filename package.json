@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "yarn workspace foreach -A build"
+    "build": "yarn workspaces foreach -A run build"
   },
   "workspaces": [
     "veyes-plugin-system",

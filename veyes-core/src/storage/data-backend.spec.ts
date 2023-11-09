@@ -24,6 +24,10 @@ describe('Testing AbstractDataBackend', () => {
             return Promise.resolve()
         }
 
+        supportedScheme(): string[] {
+            return ["Fake"];
+        }
+
     }
 
 

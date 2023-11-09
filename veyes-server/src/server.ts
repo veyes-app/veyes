@@ -7,6 +7,7 @@ import {CliConfigLoader} from "./config/cliConfigLoader";
 import {BootstrapConfigLoader} from "./config/bootstrapLoader";
 import {Registries} from "@veyes/core";
 import {DataBackendAPI, KnownRegistryTypes, MinimalConfig, NewDataBackendAPI, ServerConfig} from "@veyes/models";
+import {defaultConfig} from "./config/defaultConfig";
 
 interface WebserverOptions {
     plugins: string[]
@@ -22,35 +23,47 @@ export class WebServer {
     private dataBackend: DataBackendAPI
 
     constructor() {
+        console.log("Creating new Webserver...")
         this.wsServer = wsExpress(express())
         this.server = this.wsServer.app
         this.registries = new Registries()
     }
 
     private bootstrap() {
+        console.log("Bootstrapping server")
+        this.registries.forType(KnownRegistryTypes.ConfigProviders).register(CliConfigLoader)
+
+        const cliConfig = defaultConfig;
         const cliLoader = new CliConfigLoader()
-        this.registries.forType(KnownRegistryTypes.ConfigProviders).register(cliLoader)
+        Object.assign(cliConfig, cliLoader.getConfiguration())
+        const minimalConfig: MinimalConfig = {pluginsDirectories: typeof cliConfig.pluginsDirectories === 'string' ? [cliConfig.pluginsDirectories] : cliConfig.pluginsDirectories}
+        console.log("Found minimal config", minimalConfig)
 
-        const cliConfig = cliLoader.getConfiguration()
-        const minimalConfig: MinimalConfig = {pluginsDirectories: cliConfig.pluginsDirectories}
-
+        console.log("Initializing plugin system")
         this.pluginLoader = new PluginLoader(minimalConfig, this.registries.forType(KnownRegistryTypes.Plugins))
+        console.log("Discover / Load modules...")
         this.pluginLoader.loadAllModules();
 
+        console.log("Reading complete configuration from specified sources")
         this.config = new BootstrapConfigLoader(this.registries.forType(KnownRegistryTypes.ConfigProviders), minimalConfig).getConfiguration()
+        console.log("Loaded configuration !")
+        console.log(this.config)
     }
 
     private initializeDataBackend() {
+        console.log("Initializing data-backend")
         if (!this.config.dataBackend) {
             throw new Error("No data-backend defined ")
         }
+
         const backendUrl = new URL(this.config.dataBackend)
         const backendProvider = this.registries.forType(KnownRegistryTypes.DataBackendProvider).list()
             .filter(([scheme,]) => backendUrl.protocol === scheme)
-            .shift()[1] as NewDataBackendAPI | undefined
+            .shift()?.[1] as NewDataBackendAPI | undefined
 
         if (!backendProvider) {
-            throw new Error(`Could not find any provider that can handle the following connection string ${this.config.dataBackend}`)
+            const providers = this.registries.forType(KnownRegistryTypes.DataBackendProvider).list().map(([k,]) => k)
+            throw new Error(`Could not find any provider that can handle the following connection string ${this.config.dataBackend}; Available providers are: ${providers}'`)
         }
 
         this.dataBackend = new backendProvider(backendUrl)

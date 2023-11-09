@@ -1,7 +1,6 @@
 import {Request, Response, NextFunction, Router} from "express";
-import {Controller} from "@veyes/models";
+import {ApplicationContext, Controller} from "@veyes/models";
 
-import {ApplicationContext} from "../model/context";
 
 export class PluginController implements Controller {
     constructor(app: ApplicationContext) {

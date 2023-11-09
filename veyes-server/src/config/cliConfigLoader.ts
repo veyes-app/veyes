@@ -44,7 +44,7 @@ export class CliConfigLoader implements ConfigLoader {
     }
 
     canHandle(configPath: URL): boolean {
-        return true;
+        return true
     }
 
     getPriority(): number {

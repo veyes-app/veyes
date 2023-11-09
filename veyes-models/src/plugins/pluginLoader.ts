@@ -18,7 +18,7 @@ export type VeyesMetadata = {
 }
 
 export interface PackageJsonVeyes extends PackageJson {
-    veyesPluginMetadata?: VeyesMetadata
+    veyesMetadata?: VeyesMetadata
 }
 
 export interface FoundPackage {

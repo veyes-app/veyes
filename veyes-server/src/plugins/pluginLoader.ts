@@ -33,8 +33,13 @@ export class PluginLoader implements PluginLoaderIf {
     }
 
     private updateNodePath() {
-        const currentPath = process.env.NODE_PATH || ''
-        process.env.NODE_PATH = [...currentPath.split(Path.delimiter), ...this.config.pluginsDirectories.map(s => Path.resolve(s))].join(Path.delimiter)
+        if (this.config.pluginsDirectories) {
+            console.log("Adding plugin directories to NODE_PATH")
+            const currentPath = process.env.NODE_PATH || ''
+            process.env.NODE_PATH = [...currentPath.split(Path.delimiter), ...this.config.pluginsDirectories.map(s => Path.resolve(s))].join(Path.delimiter)
+        } else {
+            console.warn("No plugin directories specified !")
+        }
     }
 
     async loadOrInstall(module: string) {
@@ -125,6 +130,7 @@ export class PluginLoader implements PluginLoaderIf {
     }
 
     private findAllNodeModulesDirs(): string[] {
+        console.log("Building list of directory for lookup")
         // In case NODE_PATH is defined with respect it
         let nodeModules = (process.env.NODE_PATH || '').split(Path.delimiter)
         const root = Path.resolve("/")
@@ -133,30 +139,39 @@ export class PluginLoader implements PluginLoaderIf {
         while (current !== root) {
             current = Path.join(current, '..')
             const nodeModulesPath = Path.join(current, 'node_modules')
+            console.log("Trying ", nodeModulesPath, " ?")
             if (fs.existsSync(nodeModulesPath)) {
+                console.log("Saving", nodeModulesPath, " as valid path")
                 nodeModules.push(nodeModulesPath)
             }
         }
+        console.log("All paths", nodeModules)
         return nodeModules
     }
 
     private discoverPluginsFromFolders(nmPaths: string[]): FoundPackage[] {
-        return nmPaths.flatMap(nodeModule => fs.readdirSync(nodeModule)
-            .flatMap(f => {
-                const modulePath = Path.join(nodeModule, f)
-                if (f.startsWith("@")) {
-                    return fs.readdirSync(modulePath).map((f1) => Path.join(modulePath, f1))
-                } else {
-                    return [modulePath]
-                }
+        return nmPaths.filter(s => s) //Ignore blank paths
+            .flatMap(nodeModule => {
+                return fs.readdirSync(nodeModule)
+                    .flatMap(f => {
+                        const modulePath = Path.join(nodeModule, f)
+                        if (f.startsWith("@")) {
+                            return fs.readdirSync(modulePath).map((f1) => Path.join(modulePath, f1))
+                        } else {
+                            return [modulePath]
+                        }
+                    })
+                    .map(f => Path.join(f, 'package.json'))
+                    .filter((f) => fs.existsSync(f))
+                    .map(f => ({
+                        path: f,
+                        packageJson: JSON.parse(fs.readFileSync(f, {encoding: "utf-8"})) as PackageJsonVeyes
+                    } as FoundPackage))
+                    .filter(f => {
+                        console.log(f.path, "is veyes package", !!f.packageJson.veyesMetadata)
+                        return !!f.packageJson.veyesMetadata;
+                    })
             })
-            .map(f => Path.join(f, 'package.json'))
-            .filter((f) => fs.existsSync(f))
-            .map(f => ({
-                path: f,
-                packageJson: JSON.parse(fs.readFileSync(f, {encoding: "utf-8"})) as PackageJsonVeyes
-            } as FoundPackage))
-            .filter(f => f.packageJson.veyesPluginMetadata))
     }
 
     private loadPackageJsonModule(pathSpec: string) {
@@ -166,9 +181,14 @@ export class PluginLoader implements PluginLoaderIf {
 
     private loadModule(name: string, moduleRef: string) {
         console.info(`Loading module from ${moduleRef}`)
-        const imported: PluginBundle = require(moduleRef)
 
-        //Add checks to ensure it is a valid-exported content !
+        const imported: any = require(moduleRef)
+
+        console.log("IMPORTED", imported);
+
+        //TODO: Add checks to ensure it is a valid-exported content !
+        //TODO: Handle default and non default types / exports and handle the plugin load
+        //TODO: imported is too broad only store the PluginBundle !
         this.registry.register(imported, name)
     }
 
@@ -183,6 +203,7 @@ export class PluginLoader implements PluginLoaderIf {
     }
 
     loadAllModules() {
+        console.log("Finding all veyes plugins")
         const nodeModulePackagesJsonPaths = this.discoverPluginsFromFolders(this.findAllNodeModulesDirs())
         nodeModulePackagesJsonPaths.forEach(p => this.loadModule(p.packageJson.name, p.packageJson.name))
     }
