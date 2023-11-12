@@ -3,6 +3,6 @@
     "rootDir": "./src"
   },
   "extends": [
-    "../../.config/tsconfig.json"
+    "../../../.config/tsconfig.json"
   ]
 }
