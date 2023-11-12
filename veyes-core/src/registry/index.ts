@@ -8,7 +8,14 @@ export class Registries implements RegistriesIf {
         this.registries = {}
     }
 
+    public validateApiGroup(apiGroup: string) {
+        if (!apiGroup.match(/^[a-z]+\/v[0-9]+$/)) {
+            throw new Error("Given API Group is Invalid")
+        }
+    }
+
     register(name: string, registry: Registry<any>) {
+        this.validateApiGroup(name);
         if (this.registries[name]) {
             throw new Error('Could not register an already existing registry')
         }
@@ -16,6 +23,7 @@ export class Registries implements RegistriesIf {
     }
 
     forType<T>(name: string): Registry<T> {
+        this.validateApiGroup(name);
         if (!this.registries[name]) {
             this.register(name, new Registry<T>())
         }
@@ -24,6 +32,10 @@ export class Registries implements RegistriesIf {
 
     getRegistry<T>(name: string): Registry<T> | undefined {
         return this.registries[name]
+    }
+
+    types() {
+        return Object.keys(this.registries)
     }
 
 }
@@ -36,8 +48,11 @@ export class Registry<T> implements RegistryIf<T> {
     }
 
     register(element: T, name = element.constructor.name): RegistryIf<T> {
-        this.items[name] = element
-        return this
+        if (!this.items[name]) {
+            this.items[name] = element
+            return this;
+        }
+        throw new Error(`${name} is already registered with another value; To replace, first remove then register`)
     }
 
     get(name: string) {

@@ -11,12 +11,16 @@
 import {PluginBundle} from "@veyes/models";
 import {Registries} from "../registry";
 
-export class PluginBundleApi extends Registries implements PluginBundle {
-    private apiGroup: string;
-
-    constructor(apiGroup: string) {
-        super()
-        this.apiGroup = apiGroup
+export class PluginBundleApi implements PluginBundle {
+    private readonly registries: Registries;
+    constructor(registries: Registries) {
+        this.registries = registries;
     }
+
+    getRegistries(): Registries{
+        return this.registries;
+    }
+
+
 
 }

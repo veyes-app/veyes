@@ -1,18 +1,23 @@
-import express from 'express'
+import express, {Router} from 'express'
 import wsExpress, {Application, Instance} from 'express-ws'
 import http from 'http'
 import https from 'https'
 import {PluginLoader} from "./plugins";
 import {CliConfigLoader} from "./config/cliConfigLoader";
 import {BootstrapConfigLoader} from "./config/bootstrapLoader";
-import {Registries} from "@veyes/core";
-import {DataBackendAPI, KnownRegistryTypes, MinimalConfig, NewDataBackendAPI, ServerConfig} from "@veyes/models";
+import {PluginBundleApi, Registries, Registry} from "@veyes/core";
+import {
+    ApplicationContext,
+    BuiltInApiGroup,
+    Controller, CreatableController,
+    DataBackendAPI,
+    MinimalConfig,
+    NewDataBackendAPI,
+    ServerConfig
+} from "@veyes/models";
 import {defaultConfig} from "./config/defaultConfig";
-
-interface WebserverOptions {
-    plugins: string[]
-    pluginPath: string
-}
+import {ApisController} from "./api";
+import {routerLogger} from "./api/middleware";
 
 export class WebServer {
     private readonly wsServer: Instance;
@@ -27,11 +32,12 @@ export class WebServer {
         this.wsServer = wsExpress(express())
         this.server = this.wsServer.app
         this.registries = new Registries()
+        this.registries.forType(BuiltInApiGroup.controllerV1).register(ApisController, 'apis/v1')
     }
 
     private bootstrap() {
         console.log("Bootstrapping server")
-        this.registries.forType(KnownRegistryTypes.ConfigProviders).register(CliConfigLoader)
+        this.registries.forType(BuiltInApiGroup.configurationV1).register(CliConfigLoader)
 
         const cliConfig = defaultConfig;
         const cliLoader = new CliConfigLoader()
@@ -40,14 +46,43 @@ export class WebServer {
         console.log("Found minimal config", minimalConfig)
 
         console.log("Initializing plugin system")
-        this.pluginLoader = new PluginLoader(minimalConfig, this.registries.forType(KnownRegistryTypes.Plugins))
+        this.pluginLoader = new PluginLoader(minimalConfig, this.registries.forType(BuiltInApiGroup.pluginsV1))
         console.log("Discover / Load modules...")
         this.pluginLoader.loadAllModules();
+        this.pluginLoader.listLoadedModules();
+
+        this.registerPlugins();
 
         console.log("Reading complete configuration from specified sources")
-        this.config = new BootstrapConfigLoader(this.registries.forType(KnownRegistryTypes.ConfigProviders), minimalConfig).getConfiguration()
+        this.config = new BootstrapConfigLoader(this.registries.forType(BuiltInApiGroup.configurationV1), minimalConfig).getConfiguration()
         console.log("Loaded configuration !")
         console.log(this.config)
+
+        this.server.use(routerLogger)
+    }
+
+    private registerPlugins() {
+        const allPlugins = this.registries
+            .forType(BuiltInApiGroup.pluginsV1)
+            .list() as [[string, PluginBundleApi]]
+
+        allPlugins.forEach(([n, v]) => {
+            for (let type of v.getRegistries().types()) {
+                if (type === BuiltInApiGroup.pluginsV1) {
+                    console.log(n, "is attempting to register plugin which is forbidden")
+                }
+
+                for (let rv of v.getRegistries().getRegistry(type).list()) {
+                    try {
+                        this.registries.forType(type).register(rv[1], rv[0])
+                    } catch (e) {
+                        console.warn(`Skip registering ${rv[0]} as it already exists`)
+                    }
+                }
+
+
+            }
+        })
     }
 
     private initializeDataBackend() {
@@ -57,12 +92,13 @@ export class WebServer {
         }
 
         const backendUrl = new URL(this.config.dataBackend)
-        const backendProvider = this.registries.forType(KnownRegistryTypes.DataBackendProvider).list()
-            .filter(([scheme,]) => backendUrl.protocol === scheme)
+
+        const backendProvider = this.registries.forType(BuiltInApiGroup.storageV1).list()
+            .filter(([scheme,]) => backendUrl.protocol.slice(0, -1) === scheme)
             .shift()?.[1] as NewDataBackendAPI | undefined
 
         if (!backendProvider) {
-            const providers = this.registries.forType(KnownRegistryTypes.DataBackendProvider).list().map(([k,]) => k)
+            const providers = this.registries.forType(BuiltInApiGroup.storageV1).list().map(([k,]) => k)
             throw new Error(`Could not find any provider that can handle the following connection string ${this.config.dataBackend}; Available providers are: ${providers}'`)
         }
 
@@ -70,21 +106,35 @@ export class WebServer {
     }
 
     start() {
-
         this.bootstrap();
         this.initializeDataBackend()
+        this.initializeControllers()
 
-        const httpServer = http.createServer(this.server).listen(80)
-        const httpsServer = https.createServer(this.server).listen(443)
+        const httpServer = http.createServer(this.server).listen(this.config.port)
 
         const onErrorCb = (e) => {
-            httpsServer.close()
             httpServer.close()
             console.error("Could not start server ", e)
         }
 
         httpServer.on('error', onErrorCb)
-        httpsServer.on('error', onErrorCb)
     }
 
+    private initializeControllers() {
+        const applicationContext: ApplicationContext = {
+            dataBackend: this.dataBackend,
+            registries: this.registries,
+            pluginLoader: this.pluginLoader,
+            runtimeConfig: this.config
+        }
+        this.registries.forType<CreatableController>(BuiltInApiGroup.controllerV1)
+            .list()
+            .forEach(([apiGroup, Controller]) => {
+                const controller = new Controller(applicationContext)
+                const router = Router()
+                controller.registerRoutes(router)
+                console.log("Register routes ", apiGroup,)
+                this.server.use("/" + apiGroup, router)
+            })
+    }
 }

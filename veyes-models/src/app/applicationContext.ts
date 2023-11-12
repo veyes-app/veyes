@@ -7,4 +7,5 @@ export interface ApplicationContext {
     registries: RegistriesIf
     pluginLoader: PluginLoaderIf
     runtimeConfig: Record<string, any>
+    // eventEmmiter: EventEmmiter
 }

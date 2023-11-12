@@ -3,7 +3,7 @@ import fs from 'fs'
 import Path from 'path'
 import os from "os";
 import semver from 'semver'
-import {Registry} from "@veyes/core";
+import {PluginBundleApi, Registry} from "@veyes/core";
 import {
     DistMinimal,
     FoundPackage,
@@ -182,14 +182,30 @@ export class PluginLoader implements PluginLoaderIf {
     private loadModule(name: string, moduleRef: string) {
         console.info(`Loading module from ${moduleRef}`)
 
-        const imported: any = require(moduleRef)
+        try {
+            const imported: any = require(moduleRef)
+            const exportedKeys = Object.keys(imported)
 
-        console.log("IMPORTED", imported);
+            if (exportedKeys.length != 1){
+                throw new Error("Package must be contain a single export")
+            }
 
-        //TODO: Add checks to ensure it is a valid-exported content !
-        //TODO: Handle default and non default types / exports and handle the plugin load
-        //TODO: imported is too broad only store the PluginBundle !
-        this.registry.register(imported, name)
+            // console.log("IMPORTED", imported);
+            const obj: PluginBundleApi | undefined = imported[exportedKeys[0]]
+
+            if (!obj) {
+                throw new Error("plugin module export undefined content !")
+            }
+
+            if (!(obj instanceof PluginBundleApi)){
+                throw new Error("Exported content must be of type PluginBundleApi !")
+            }
+            this.registry.register(obj, name)
+
+        }
+        catch (e){
+            console.warn(name, "is invalid. Plugin loading skipped:", e.message)
+        }
     }
 
     private isExistingPackageValid(pathOrName: string, versionRange: string) {
@@ -206,5 +222,12 @@ export class PluginLoader implements PluginLoaderIf {
         console.log("Finding all veyes plugins")
         const nodeModulePackagesJsonPaths = this.discoverPluginsFromFolders(this.findAllNodeModulesDirs())
         nodeModulePackagesJsonPaths.forEach(p => this.loadModule(p.packageJson.name, p.packageJson.name))
+    }
+
+    listLoadedModules() {
+        console.log("Loaded plugins")
+        for (let [mod,] of this.registry.list()) {
+            console.log("- ", mod)
+        }
     }
 }

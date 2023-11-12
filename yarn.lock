@@ -983,6 +983,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/express@npm:^4.17.21":
+  version: 4.17.21
+  resolution: "@types/express@npm:4.17.21"
+  dependencies:
+    "@types/body-parser": "npm:*"
+    "@types/express-serve-static-core": "npm:^4.17.33"
+    "@types/qs": "npm:*"
+    "@types/serve-static": "npm:*"
+  checksum: 12e562c4571da50c7d239e117e688dc434db1bac8be55613294762f84fd77fbd0658ccd553c7d3ab02408f385bc93980992369dd30e2ecd2c68c358e6af8fabf
+  languageName: node
+  linkType: hard
+
 "@types/graceful-fs@npm:^4.1.3":
   version: 4.1.8
   resolution: "@types/graceful-fs@npm:4.1.8"
@@ -1216,9 +1228,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@veyes-plugins/config-provider-env@npm:1.0.0, @veyes-plugins/config-provider-env@workspace:veyes-core-plugins/config-provider-env":
+"@veyes-plugins/annotation-internal-datastore@workspace:veyes-core-plugins/annotations/annotation-internal-datastore":
   version: 0.0.0-use.local
-  resolution: "@veyes-plugins/config-provider-env@workspace:veyes-core-plugins/config-provider-env"
+  resolution: "@veyes-plugins/annotation-internal-datastore@workspace:veyes-core-plugins/annotations/annotation-internal-datastore"
   dependencies:
     "@veyes/core": "npm:^1.0.0"
     "@veyes/models": "npm:^1.0.0"
@@ -1226,9 +1238,44 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@veyes-plugins/config-provider-json@npm:1.0.0, @veyes-plugins/config-provider-json@workspace:veyes-core-plugins/config-provider-json":
+"@veyes-plugins/annotations-core@npm:1.0.0, @veyes-plugins/annotations-core@workspace:veyes-core-plugins/annotations/annotations-core":
   version: 0.0.0-use.local
-  resolution: "@veyes-plugins/config-provider-json@workspace:veyes-core-plugins/config-provider-json"
+  resolution: "@veyes-plugins/annotations-core@workspace:veyes-core-plugins/annotations/annotations-core"
+  dependencies:
+    "@types/express": "npm:^4.17.21"
+    "@veyes/core": "npm:^1.0.0"
+    "@veyes/models": "npm:^1.0.0"
+    express: "npm:^4.18.2"
+    react: "npm:^18.2.0"
+    typescript: "npm:^5.2.2"
+  languageName: unknown
+  linkType: soft
+
+"@veyes-plugins/authz-rbac@workspace:veyes-core-plugins/authentication/authz-rbac":
+  version: 0.0.0-use.local
+  resolution: "@veyes-plugins/authz-rbac@workspace:veyes-core-plugins/authentication/authz-rbac"
+  dependencies:
+    "@types/express": "npm:^4.17.21"
+    "@veyes/core": "npm:^1.0.0"
+    "@veyes/models": "npm:^1.0.0"
+    express: "npm:^4.18.2"
+    typescript: "npm:^5.2.2"
+  languageName: unknown
+  linkType: soft
+
+"@veyes-plugins/config-provider-env@npm:1.0.0, @veyes-plugins/config-provider-env@workspace:veyes-core-plugins/config/config-provider-env":
+  version: 0.0.0-use.local
+  resolution: "@veyes-plugins/config-provider-env@workspace:veyes-core-plugins/config/config-provider-env"
+  dependencies:
+    "@veyes/core": "npm:^1.0.0"
+    "@veyes/models": "npm:^1.0.0"
+    typescript: "npm:^5.2.2"
+  languageName: unknown
+  linkType: soft
+
+"@veyes-plugins/config-provider-json@npm:1.0.0, @veyes-plugins/config-provider-json@workspace:veyes-core-plugins/config/config-provider-json":
+  version: 0.0.0-use.local
+  resolution: "@veyes-plugins/config-provider-json@workspace:veyes-core-plugins/config/config-provider-json"
   dependencies:
     "@types/yaml": "npm:^1.9.7"
     "@veyes/core": "npm:^1.0.0"
@@ -1238,9 +1285,34 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@veyes-plugins/datasource-random@workspace:veyes-core-plugins/datasource-random":
+"@veyes-plugins/controller-plugins@npm:1.0.0, @veyes-plugins/controller-plugins@workspace:veyes-core-plugins/controller-plugins":
   version: 0.0.0-use.local
-  resolution: "@veyes-plugins/datasource-random@workspace:veyes-core-plugins/datasource-random"
+  resolution: "@veyes-plugins/controller-plugins@workspace:veyes-core-plugins/controller-plugins"
+  dependencies:
+    "@types/express": "npm:^4.17.21"
+    "@veyes/core": "npm:^1.0.0"
+    "@veyes/models": "npm:^1.0.0"
+    express: "npm:^4.18.2"
+    typescript: "npm:^5.2.2"
+  languageName: unknown
+  linkType: soft
+
+"@veyes-plugins/dashboards@npm:1.0.0, @veyes-plugins/dashboards@workspace:veyes-core-plugins/dashboards":
+  version: 0.0.0-use.local
+  resolution: "@veyes-plugins/dashboards@workspace:veyes-core-plugins/dashboards"
+  dependencies:
+    "@types/express": "npm:^4.17.21"
+    "@veyes/core": "npm:^1.0.0"
+    "@veyes/models": "npm:^1.0.0"
+    express: "npm:^4.18.2"
+    react: "npm:^18.2.0"
+    typescript: "npm:^5.2.2"
+  languageName: unknown
+  linkType: soft
+
+"@veyes-plugins/datasource-random@workspace:veyes-core-plugins/datasources/datasource-random":
+  version: 0.0.0-use.local
+  resolution: "@veyes-plugins/datasource-random@workspace:veyes-core-plugins/datasources/datasource-random"
   dependencies:
     "@veyes/core": "npm:^1.0.0"
     "@veyes/models": "npm:^1.0.0"
@@ -1249,36 +1321,38 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@veyes-plugins/datasources@workspace:veyes-core-plugins/datasources":
+"@veyes-plugins/datasources-core@npm:1.0.0, @veyes-plugins/datasources-core@workspace:veyes-core-plugins/datasources/datasources-core":
   version: 0.0.0-use.local
-  resolution: "@veyes-plugins/datasources@workspace:veyes-core-plugins/datasources"
+  resolution: "@veyes-plugins/datasources-core@workspace:veyes-core-plugins/datasources/datasources-core"
   dependencies:
+    "@types/express": "npm:^4.17.21"
     "@veyes/core": "npm:^1.0.0"
     "@veyes/models": "npm:^1.0.0"
+    express: "npm:^4.18.2"
     react: "npm:^18.2.0"
     typescript: "npm:^5.2.2"
   languageName: unknown
   linkType: soft
 
-"@veyes-plugins/panel-text@workspace:veyes-core-plugins/panel-text":
+"@veyes-plugins/panel-text@workspace:veyes-core-plugins/panels/panel-text":
   version: 0.0.0-use.local
-  resolution: "@veyes-plugins/panel-text@workspace:veyes-core-plugins/panel-text"
+  resolution: "@veyes-plugins/panel-text@workspace:veyes-core-plugins/panels/panel-text"
   dependencies:
     typescript: "npm:^5.2.2"
   languageName: unknown
   linkType: soft
 
-"@veyes-plugins/panel-timeseries@workspace:veyes-core-plugins/panel-timeseries":
+"@veyes-plugins/panel-timeseries@workspace:veyes-core-plugins/panels/panel-timeseries":
   version: 0.0.0-use.local
-  resolution: "@veyes-plugins/panel-timeseries@workspace:veyes-core-plugins/panel-timeseries"
+  resolution: "@veyes-plugins/panel-timeseries@workspace:veyes-core-plugins/panels/panel-timeseries"
   dependencies:
     typescript: "npm:^5.2.2"
   languageName: unknown
   linkType: soft
 
-"@veyes-plugins/storage-backend-etcd@npm:1.0.0, @veyes-plugins/storage-backend-etcd@workspace:veyes-core-plugins/storage-backend-etcd":
+"@veyes-plugins/storage-backend-etcd@npm:1.0.0, @veyes-plugins/storage-backend-etcd@workspace:veyes-core-plugins/storage/storage-backend-etcd":
   version: 0.0.0-use.local
-  resolution: "@veyes-plugins/storage-backend-etcd@workspace:veyes-core-plugins/storage-backend-etcd"
+  resolution: "@veyes-plugins/storage-backend-etcd@workspace:veyes-core-plugins/storage/storage-backend-etcd"
   dependencies:
     "@veyes/core": "npm:^1.0.0"
     "@veyes/models": "npm:^1.0.0"
@@ -1287,9 +1361,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@veyes-plugins/storage-backend-sqlite@npm:1.0.0, @veyes-plugins/storage-backend-sqlite@workspace:veyes-core-plugins/storage-backend-sqlite":
+"@veyes-plugins/storage-backend-sqlite@npm:1.0.0, @veyes-plugins/storage-backend-sqlite@workspace:veyes-core-plugins/storage/storage-backend-sqlite":
   version: 0.0.0-use.local
-  resolution: "@veyes-plugins/storage-backend-sqlite@workspace:veyes-core-plugins/storage-backend-sqlite"
+  resolution: "@veyes-plugins/storage-backend-sqlite@workspace:veyes-core-plugins/storage/storage-backend-sqlite"
   dependencies:
     "@types/better-sqlite3": "npm:^7.6.6"
     "@types/jest": "npm:^29.5.7"
@@ -1301,9 +1375,51 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@veyes-plugins/storage-backend-zookeeper@workspace:veyes-core-plugins/storage-backend-zookeeper":
+"@veyes-plugins/storage-backend-zookeeper@workspace:veyes-core-plugins/storage/storage-backend-zookeeper":
   version: 0.0.0-use.local
-  resolution: "@veyes-plugins/storage-backend-zookeeper@workspace:veyes-core-plugins/storage-backend-zookeeper"
+  resolution: "@veyes-plugins/storage-backend-zookeeper@workspace:veyes-core-plugins/storage/storage-backend-zookeeper"
+  dependencies:
+    "@veyes/core": "npm:^1.0.0"
+    "@veyes/models": "npm:^1.0.0"
+    typescript: "npm:^5.2.2"
+  languageName: unknown
+  linkType: soft
+
+"@veyes-plugins/user-auth-basic@workspace:veyes-core-plugins/authentication/users-auth-basic":
+  version: 0.0.0-use.local
+  resolution: "@veyes-plugins/user-auth-basic@workspace:veyes-core-plugins/authentication/users-auth-basic"
+  dependencies:
+    "@veyes/core": "npm:^1.0.0"
+    "@veyes/models": "npm:^1.0.0"
+    typescript: "npm:^5.2.2"
+  languageName: unknown
+  linkType: soft
+
+"@veyes-plugins/user-auth-core@workspace:veyes-core-plugins/authentication/users-auth-core":
+  version: 0.0.0-use.local
+  resolution: "@veyes-plugins/user-auth-core@workspace:veyes-core-plugins/authentication/users-auth-core"
+  dependencies:
+    "@types/express": "npm:^4.17.21"
+    "@veyes/core": "npm:^1.0.0"
+    "@veyes/models": "npm:^1.0.0"
+    express: "npm:^4.18.2"
+    typescript: "npm:^5.2.2"
+  languageName: unknown
+  linkType: soft
+
+"@veyes-plugins/user-auth-ldap@workspace:veyes-core-plugins/authentication/users-auth-ldap":
+  version: 0.0.0-use.local
+  resolution: "@veyes-plugins/user-auth-ldap@workspace:veyes-core-plugins/authentication/users-auth-ldap"
+  dependencies:
+    "@veyes/core": "npm:^1.0.0"
+    "@veyes/models": "npm:^1.0.0"
+    typescript: "npm:^5.2.2"
+  languageName: unknown
+  linkType: soft
+
+"@veyes-plugins/user-auth-oidc@workspace:veyes-core-plugins/authentication/users-auth-oidc":
+  version: 0.0.0-use.local
+  resolution: "@veyes-plugins/user-auth-oidc@workspace:veyes-core-plugins/authentication/users-auth-oidc"
   dependencies:
     "@veyes/core": "npm:^1.0.0"
     "@veyes/models": "npm:^1.0.0"
@@ -1352,8 +1468,12 @@ __metadata:
     "@types/semver": "npm:^7.5.4"
     "@types/tar": "npm:^6.1.7"
     "@types/yaml": "npm:^1.9.7"
+    "@veyes-plugins/annotations-core": "npm:1.0.0"
     "@veyes-plugins/config-provider-env": "npm:1.0.0"
     "@veyes-plugins/config-provider-json": "npm:1.0.0"
+    "@veyes-plugins/controller-plugins": "npm:1.0.0"
+    "@veyes-plugins/dashboards": "npm:1.0.0"
+    "@veyes-plugins/datasources-core": "npm:1.0.0"
     "@veyes-plugins/storage-backend-etcd": "npm:1.0.0"
     "@veyes-plugins/storage-backend-sqlite": "npm:1.0.0"
     "@veyes/core": "npm:1.0.0"

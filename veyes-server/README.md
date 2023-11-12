@@ -38,7 +38,8 @@
 * GET /api/annotation/v1 => all annotation providers
 * POST /api/annotation/v1 => new provider instance
 * GET,DELETE,PUT  /api/annotation/v1/<provider-uid> => GET,DELETE,Update provider config
-* GET,DELETE,PUT /api/annotation/v1/<provider-uid>/annotation/<annotation-uid> => get,update,delete one annotation
+*
 * POST,GET /api/annotation/v1/<provider-uid>/annotation => Query/Create annotations
+* GET,DELETE,PUT /api/annotation/v1/<provider-uid>/annotation/<annotation-uid> => get,update,delete one annotation
 *
 ```

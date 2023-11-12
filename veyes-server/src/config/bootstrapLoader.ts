@@ -24,7 +24,7 @@ export class BootstrapConfigLoader implements ConfigLoader {
 
             for (let url of URLs) {
                 if (!provider.canHandle(url)) {
-                    console.log(`Config provider ${provider.constructor.name} cannot process config ${url.toString}`)
+                    console.log(`Config provider ${provider.constructor.name} cannot process config ${url.toString()}`)
                     continue
                 }
 

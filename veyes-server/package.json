@@ -27,8 +27,12 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
+    "@veyes-plugins/annotations-core": "1.0.0",
     "@veyes-plugins/config-provider-env": "1.0.0",
     "@veyes-plugins/config-provider-json": "1.0.0",
+    "@veyes-plugins/controller-plugins": "1.0.0",
+    "@veyes-plugins/dashboards": "1.0.0",
+    "@veyes-plugins/datasources-core": "1.0.0",
     "@veyes-plugins/storage-backend-etcd": "1.0.0",
     "@veyes-plugins/storage-backend-sqlite": "1.0.0",
     "@veyes/core": "1.0.0",

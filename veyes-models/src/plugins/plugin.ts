@@ -1,3 +1,5 @@
+import {RegistriesIf} from "../registry";
+
 export interface Plugin {
 
 }
@@ -9,6 +11,7 @@ export interface PluginDescriptor {
 }
 
 export interface PluginBundle {
+    getRegistries(): RegistriesIf
 
     // registerPanel(panelPlugin: PanelPluginApi): PluginBundle
     //

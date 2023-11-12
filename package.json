@@ -11,7 +11,7 @@
     "veyes-server",
     "veyes-core",
     "veyes-models",
-    "veyes-core-plugins/*",
+    "veyes-core-plugins/**",
     "veyes-ui",
     "veyes-tools"
   ],

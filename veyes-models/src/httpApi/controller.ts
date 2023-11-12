@@ -1,10 +1,8 @@
 import {Router} from "express";
-import {ApplicationContext} from "../app/applicationContext";
+import {ApplicationContext} from "../app";
 
 export interface Controller {
     registerRoutes(router: Router): void;
-    getApiGroup(): string
-    getApiVersion(): string
 }
 
 export interface CreatableController{

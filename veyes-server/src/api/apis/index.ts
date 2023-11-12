@@ -1,29 +1,20 @@
 import {Request, Response, NextFunction, Router} from "express";
-import {Application} from 'express-ws'
 import * as console from "console";
-import {Controller} from "@veyes/models";
+import {ApplicationContext, Controller} from "@veyes/models";
 
 export class ApisController implements Controller {
-    private app: Application;
+    private context: ApplicationContext;
 
-    constructor(app: Application) {
-        this.app = app
+    constructor(app: ApplicationContext) {
+        this.context = app
     }
 
     listAllRoutesAndApis(req: Request, res: Response, next: NextFunction) {
-        console.log(this.app.routes)
+        console.log("listAllRoutesAndApis")
     }
 
     registerRoutes(router: Router) {
         router.route('/').get(this.listAllRoutesAndApis.bind(this))
-    }
-
-    getApiGroup(): string {
-        return "";
-    }
-
-    getApiVersion(): string {
-        return "";
     }
 }
 
