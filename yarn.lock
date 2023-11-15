@@ -1046,6 +1046,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/jest@npm:^29.5.8":
+  version: 29.5.8
+  resolution: "@types/jest@npm:29.5.8"
+  dependencies:
+    expect: "npm:^29.0.0"
+    pretty-format: "npm:^29.0.0"
+  checksum: a28e7827ea7e1a2aace6a386868fa6b8402c162d6c71570aed2c29d3745ddc22ceef6899a20643071817905d3c57b670a7992fc8760bff65939351fd4dc481cf
+  languageName: node
+  linkType: hard
+
 "@types/mime@npm:*":
   version: 3.0.3
   resolution: "@types/mime@npm:3.0.3"
@@ -1256,9 +1266,12 @@ __metadata:
   resolution: "@veyes-plugins/authz-rbac@workspace:veyes-core-plugins/authentication/authz-rbac"
   dependencies:
     "@types/express": "npm:^4.17.21"
+    "@types/jest": "npm:^29.5.8"
     "@veyes/core": "npm:^1.0.0"
     "@veyes/models": "npm:^1.0.0"
     express: "npm:^4.18.2"
+    jest: "npm:^29.7.0"
+    ts-jest: "npm:^29.1.1"
     typescript: "npm:^5.2.2"
   languageName: unknown
   linkType: soft
@@ -1437,6 +1450,19 @@ __metadata:
     events: "npm:^3.3.0"
     jest: "npm:^29.7.0"
     ts-jest: "npm:^29.1.1"
+    typescript: "npm:^5.2.2"
+  languageName: unknown
+  linkType: soft
+
+"@veyes/datasources-models@workspace:veyes-core-plugins/datasources/datasources-models":
+  version: 0.0.0-use.local
+  resolution: "@veyes/datasources-models@workspace:veyes-core-plugins/datasources/datasources-models"
+  dependencies:
+    "@types/express": "npm:^4.17.21"
+    "@veyes/core": "npm:^1.0.0"
+    "@veyes/models": "npm:^1.0.0"
+    express: "npm:^4.18.2"
+    react: "npm:^18.2.0"
     typescript: "npm:^5.2.2"
   languageName: unknown
   linkType: soft

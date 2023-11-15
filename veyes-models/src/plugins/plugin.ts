@@ -1,9 +1,5 @@
 import {RegistriesIf} from "../registry";
 
-export interface Plugin {
-
-}
-
 export interface PluginDescriptor {
     name: string
     id: string

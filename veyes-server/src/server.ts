@@ -1,23 +1,22 @@
-import express, {Router} from 'express'
-import wsExpress, {Application, Instance} from 'express-ws'
-import http from 'http'
-import https from 'https'
-import {PluginLoader} from "./plugins";
-import {CliConfigLoader} from "./config/cliConfigLoader";
-import {BootstrapConfigLoader} from "./config/bootstrapLoader";
-import {PluginBundleApi, Registries, Registry} from "@veyes/core";
+import {PluginBundleApi, Registries} from "@veyes/core";
 import {
     ApplicationContext,
     BuiltInApiGroup,
-    Controller, CreatableController,
+    CreatableController,
     DataBackendAPI,
     MinimalConfig,
     NewDataBackendAPI,
     ServerConfig
 } from "@veyes/models";
-import {defaultConfig} from "./config/defaultConfig";
+import express, {Router} from 'express'
+import wsExpress, {Application, Instance} from 'express-ws'
+import http from 'http'
 import {ApisController} from "./api";
 import {routerLogger} from "./api/middleware";
+import {BootstrapConfigLoader} from "./config/bootstrapLoader";
+import {CliConfigLoader} from "./config/cliConfigLoader";
+import {defaultConfig} from "./config/defaultConfig";
+import {PluginLoader} from "./plugins";
 
 export class WebServer {
     private readonly wsServer: Instance;

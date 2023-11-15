@@ -15,4 +15,5 @@ export type MinimalConfig = {
 
 export interface ServerConfig extends MinimalConfig {
     dataBackend: string // Again URL
+    apiPrefix: string
 }
